@@ -215,4 +215,106 @@ void mostrarPalabras(const vector<PalabraInfo>& diccionario) {
         cout << "------------------------------------------" << endl;
     }
 }
+void actualizarPalabra(vector<PalabraInfo>& diccionario) {
+     if (diccionario.empty()) {
+        cout << "El diccionario esta vacio. No hay palabras para actualizar." << endl;
+        return;
+    }
+    string palabraBuscar;
+    cout << "Ingrese la palabra clave que desea actualizar: ";
+    getline(cin, palabraBuscar);
+
+    int indice = buscarIndicePalabra(diccionario, palabraBuscar);
+
+    if (indice != -1) {
+        cout << "Palabra encontrada. Ingrese los nuevos datos:" << endl;
+        cout << "Traduccion actual ('" << diccionario[indice].traduccion << "'). Nueva traduccion: ";
+        getline(cin, diccionario[indice].traduccion);
+        cout << "Funcionalidad actual ('" << diccionario[indice].funcionalidad << "'). Nueva funcionalidad: ";
+        getline(cin, diccionario[indice].funcionalidad);
+        cout << "Palabra '" << palabraBuscar << "' actualizada con exito." << endl;
+    } else {
+        cout << "Error: La palabra '" << palabraBuscar << "' no se encontro." << endl;
+    }
+}
+
+void eliminarPalabra(vector<PalabraInfo>& diccionario) {
+    if (diccionario.empty()) {
+        cout << "El diccionario esta vacio. No hay palabras para eliminar." << endl;
+        return;
+    }
+    string palabraBuscar;
+    cout << "Ingrese la palabra clave que desea eliminar: ";
+    getline(cin, palabraBuscar);
+
+    int indice = buscarIndicePalabra(diccionario, palabraBuscar);
+
+    if (indice != -1) {
+        diccionario.erase(diccionario.begin() + indice);
+        cout << "Palabra '" << palabraBuscar << "' eliminada con exito." << endl;
+    } else {
+        cout << "Error: La palabra '" << palabraBuscar << "' no se encontro." << endl;
+    }
+}
+
+
+// --- Implementación de Funciones del Traductor ---
+
+void traducirCodigo(const vector<PalabraInfo>& diccionario) {
+    if (diccionario.empty()) {
+        cout << "El diccionario esta vacio. No se pueden traducir palabras clave." << endl;
+        cout << "Use la opcion 1 del menu principal para agregar palabras primero." << endl;
+        return;
+    }
+
+    cout << "\n--- Traductor de Codigo C++ ---" << endl;
+    // ** Instrucciones actualizadas **
+    cout << "Ingrese/pegue el codigo C++. Escriba ###END### en una nueva linea y presione Enter para finalizar:" << endl;
+
+    string linea;
+    vector<string> lineasCodigo;
+
+    // ** Bucle modificado para leer hasta encontrar "###END###" **
+    while (getline(cin, linea) && linea != "###END###") {
+        lineasCodigo.push_back(linea);
+    }
+
+    if (lineasCodigo.empty()) {
+        cout << "No se ingreso codigo para traducir (o solo se ingreso ###END###)." << endl;
+        return;
+    }
+
+    cout << "\n--- Codigo Traducido ---" << endl;
+
+    string palabraActual;
+    string lineaTraducida;
+
+    for (const string& lineaActual : lineasCodigo) {
+        lineaTraducida = "";
+        palabraActual = "";
+
+        for (char c : lineaActual) {
+            // Si es letra, número o guión bajo, es parte de una palabra
+            if (isalnum(c) || c == '_') {
+                palabraActual += c;
+            } else {
+                // Si encontramos un delimitador y teníamos una palabra formada
+                if (!palabraActual.empty()) {
+                    // Traducir la palabra y añadirla a la línea traducida
+                    lineaTraducida += traducirPalabra(palabraActual, diccionario);
+                    palabraActual = ""; // Reiniciar la palabra
+                }
+                // Añadir el carácter delimitador (espacio, ;, {, }, etc.)
+                lineaTraducida += c;
+            }
+        }
+        // Si la línea termina con una palabra, procesarla
+        if (!palabraActual.empty()) {
+            lineaTraducida += traducirPalabra(palabraActual, diccionario);
+        }
+
+        cout << lineaTraducida << endl; // Imprimir la línea traducida
+    }
+    cout << "--- Fin del Codigo Traducido ---" << endl;
+}
 
