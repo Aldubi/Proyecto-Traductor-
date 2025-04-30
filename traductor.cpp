@@ -208,4 +208,11 @@ void mostrarPalabras(const vector<PalabraInfo>& diccionario) {
         return;
     }
     cout << "\n--- Listado de Palabras en Diccionario ---" << endl;
-    for (size_t i = 0; i < diccionario.size(); ++i) {
+    for (size_t i = 0; i < diccionario.size(); ++i) {
+        cout << i + 1 << ". Palabra:      " << diccionario[i].palabra << endl;
+        cout << "   Traduccion:   " << diccionario[i].traduccion << endl;
+        cout << "   Funcionalidad:" << diccionario[i].funcionalidad << endl;
+        cout << "------------------------------------------" << endl;
+    }
+}
+
